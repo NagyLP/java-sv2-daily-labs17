@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>Training360</groupId>
-    <artifactId>java-sv2-labs</artifactId>
+    <groupId>com.training360</groupId>
+    <artifactId>jdbc</artifactId>
     <version>1.0-SNAPSHOT</version>
 
 <!--    <build>-->
@@ -48,6 +48,13 @@
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-mysql</artifactId>
             <version>8.5.0</version>
+        </dependency>
+
+<!--       Flyway naplózás: FEKETE színben  -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
         </dependency>
 
     </dependencies>
