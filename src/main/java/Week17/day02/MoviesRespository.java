@@ -1,6 +1,7 @@
 package Week17.day02;
 
 import javax.sql.DataSource;
+import javax.swing.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,20 +29,25 @@ public class MoviesRespository {
 
     public List<Movie> findAllMovies(String movie) {
         List<Movie> movies = new ArrayList<>();
+
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement stmt = connection.prepareStatement("SELECT movie_name FROM movies WHERE movie_name LIKE ?")) {
-            stmt.setString(1, movie);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Movie movieName = rs.getName("movie_name");
-                    movies.add(movieName);
-                }
+// ELEGENDŐ a Statement, nem kell PrepareState..., mert nem paraméterezett)
+             Statement stmt = connection.prepareStatement("SELECT * FROM movies")) {
+            ResultSet rs = stmt.executeQuery()){
             }
-
-        } catch (SQLException sqle) {
-            throw new IllegalStateException("Update ERROR: ", sqle);
         }
-        return movies;
+        return processResultSet();
     }
+
+    private List<Movie> processResultSet(ResultSet rs) throws Exception {
+        List<Movie> movies = new ArrayList<>();
+        while (rs.next()) {
+            long id = rs.getLong("id");
+            String title = rs.getString("title");
+            LocalDate relaseDate = rs.getDate("release_date").toLocalDate();
+            movies.add(new Movie(id, title, relaseDate));
+        }
+
+    }
+
 }
