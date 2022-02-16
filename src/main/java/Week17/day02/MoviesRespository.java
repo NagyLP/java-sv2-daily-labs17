@@ -28,9 +28,10 @@ public class MoviesRespository {
         }
     }
 
+// ELEGENDŐ a Statement, nem kell PrepareState..., mert nem paraméterezett)
+
     public List<Movie> findAllMovies() {
         try (ResultSet resultSet = dataSource.getConnection().createStatement().executeQuery("SELECT * FROM movies")) {
-// ELEGENDŐ a Statement, nem kell PrepareState..., mert nem paraméterezett)
             return processResultSet(resultSet);
         } catch (SQLException sqle) {
             throw new IllegalStateException("Connection ERROR...", sqle);

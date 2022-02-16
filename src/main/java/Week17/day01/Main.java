@@ -1,6 +1,5 @@
 package Week17.day01;
 
-import Week17.day02.Movie;
 import Week17.day02.MoviesRespository;
 import org.flywaydb.core.Flyway;
 import org.mariadb.jdbc.MariaDbDataSource;
