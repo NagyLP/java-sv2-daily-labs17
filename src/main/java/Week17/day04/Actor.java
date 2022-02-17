@@ -10,6 +10,14 @@ public class Actor {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return "Actor{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
     public long getId() {
         return id;
     }
