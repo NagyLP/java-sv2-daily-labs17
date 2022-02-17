@@ -21,7 +21,9 @@ public class ActorsRepository {
 
     public long saveActorWithIdShow(String name) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement stmt = connection.prepareStatement("insert into actors(actor_name) values(?)", Statement.RETURN_GENERATED_KEYS)
+             PreparedStatement stmt =
+                     connection.prepareStatement("insert into actors(actor_name) values(?)",
+                     Statement.RETURN_GENERATED_KEYS)
         ) {
             stmt.setString(1, name);
             stmt.executeUpdate();
