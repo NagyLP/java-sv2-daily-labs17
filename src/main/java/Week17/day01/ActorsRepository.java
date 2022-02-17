@@ -1,5 +1,7 @@
 package Week17.day01;
 
+import org.mariadb.jdbc.Statement;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,14 +19,29 @@ public class ActorsRepository {
     }
 
 
-    public void saveActor(String name) {
+    public long saveActorWithIdShow(String name) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement stmt = connection.prepareStatement("insert into actors(actor_name) values(?)")) {
+             PreparedStatement stmt = connection.prepareStatement("insert into actors(actor_name) values(?)", Statement.RETURN_GENERATED_KEYS)
+        ) {
             stmt.setString(1, name);
             stmt.executeUpdate();
-
+            return executeAndGetGeneratedKey(stmt);
         } catch (SQLException sqle) {
             throw new IllegalStateException("Update ERROR: " + name, sqle);
+        }
+    }
+
+    private long executeAndGetGeneratedKey(PreparedStatement stmt) {
+        try (
+                ResultSet rs = stmt.getGeneratedKeys()
+        ) {
+            if (rs.next()) {
+                return rs.getLong(1);
+            } else {
+                throw new SQLException("No key has generated");
+            }
+        } catch (SQLException sqle) {
+            throw new IllegalArgumentException("Update ERROR", sqle);
         }
     }
 
