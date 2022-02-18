@@ -10,7 +10,7 @@ public class SqlValues {
         return new SqlValues(index, value);
     }
 
-    public SqlValues(int index, Object value) {
+    private SqlValues(int index, Object value) {
         this.index = index;
         this.value = value;
     }
