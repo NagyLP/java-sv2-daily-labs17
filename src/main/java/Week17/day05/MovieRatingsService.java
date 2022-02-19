@@ -15,11 +15,15 @@ public class MovieRatingsService {
         this.ratingsRepository = ratingsRepository;
     }
 
-    public void addRatingsByTitle(String title, Integer... ratings){
+    public void addRatingsByTitle(String title, Integer... ratings) {
         addRatingsByTitle(title, ratings);
     }
 
-    public List<Integer> getRatingsByTitle(String title){
+    public List<Integer> getRatingsById(long movieId) {
+        return ratingsRepository.fetchRatingsByMovieId(movieId);
+    }
+
+    public List<Integer> getRatingsByTitle(String title) {
         return getRatingsByTitle(title);
     }
 }
