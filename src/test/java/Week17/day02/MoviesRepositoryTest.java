@@ -5,19 +5,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mariadb.jdbc.MariaDbDataSource;
 
-import java.sql.Array;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 
-class MoviesRespositoryTest {
+class MoviesRepositoryTest {
 
-    MoviesRespository moviesRespository;
+    MoviesRepository moviesRepository;
     MariaDbDataSource dataSource = new MariaDbDataSource();
 
     @BeforeEach
@@ -35,10 +32,10 @@ class MoviesRespositoryTest {
 
     @Test
     void testInsertThanQuery() throws SQLException {
-        MoviesRespository moviesRespository = new MoviesRespository(dataSource);
-        moviesRespository.saveMovie("Tanu", LocalDate.of(1969, 01, 01));
+        MoviesRepository moviesRepository = new MoviesRepository(dataSource);
+        moviesRepository.saveMovie("Tanu", LocalDate.of(1969, 01, 01));
 //        ResultSet resultSet = dataSource.getConnection().createStatement().executeQuery("SELECT * FROM movies");
         Movie movie = new Movie(1, "Tanu", LocalDate.of(1969,01,01));
-        assertEquals("[Movie: \n id: 1 \n title: 'Tanu' \n release_date: 1969-01-01]", moviesRespository.findAllMovies().toString());
+        assertEquals("[Movie: \n id: 1 \n title: 'Tanu' \n release_date: 1969-01-01]", moviesRepository.findAllMovies().toString());
     }
 }

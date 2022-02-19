@@ -6,11 +6,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MoviesRespository {
+public class MoviesRepository {
 
     private final DataSource dataSource;
 
-    public MoviesRespository(DataSource dataSource) {
+    public MoviesRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
