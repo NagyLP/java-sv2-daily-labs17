@@ -1,5 +1,7 @@
 package Week17.day02;
 
+import Week17.services.SqlQuery;
+
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDate;
@@ -15,17 +17,36 @@ public class MoviesRepository {
     }
 
 
+    public long idFromTitle(String title) {
+        try (SqlQuery query = new SqlQuery(dataSource.getConnection())) {
+            query.setPreparedStatement(query.connection()
+                    .prepareStatement("SELECT id" +
+                            "FROM movies" +
+                            "WHERE title = ?;"));
+            query.preparedStatement().setString(1, title);
+            query.setResult(query.preparedStatement().executeQuery());
+
+            if (query.result().next()) {
+                return query.result().getLong("id");
+            }
+            throw new IllegalArgumentException("Invalid title - EXCEPTION");
+
+        } catch (SQLException sqle) {
+            throw new IllegalStateException("Connection ERROR", sqle);
+        }
+    }
+
     public long saveMovie(String title, LocalDate relasedate) {
         try (Connection connection =
                      dataSource.getConnection();
              PreparedStatement stmt =
                      connection.prepareStatement("insert into movies(title, release_date) values(?,?)",
-                     Statement.RETURN_GENERATED_KEYS)){
+                             Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, title);
             stmt.setDate(2, Date.valueOf(relasedate));
             stmt.executeUpdate();
             return executeAndGetGeneratedKey(stmt);
-        } catch(SQLException sqle){
+        } catch (SQLException sqle) {
             throw new IllegalStateException("Connection ERROR...", sqle);
         }
     }
