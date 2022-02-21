@@ -2,9 +2,7 @@ package Week17.day05;
 
 import Week17.day02.MoviesRepository;
 import Week17.day04.Actor;
-import Week17.services.SqlQuery;
 
-import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,7 +14,6 @@ public class MovieRatingsService {
 
     private MoviesRepository moviesRepository;
     private RatingsRepository ratingsRepository;
-    private DataSource dataSource;
 
     public MovieRatingsService(MoviesRepository moviesRepository,
                                RatingsRepository ratingsRepository) {
@@ -44,23 +41,7 @@ public class MovieRatingsService {
     }
 
     public double getAverageRatingById(long movieId) {
-        try (SqlQuery query = new SqlQuery(dataSource.getConnection())) {
-            query.setPreparedStatement(query.connection()
-                    .prepareStatement("SELECT" +
-                            "AVG(rating) AS 'Average rating'" +
-                            "FROM ratings" +
-                            "WHERE movie_id = ?" +
-                            "GROUP BY movie_id;"));
-            query.preparedStatement().setLong(1, movieId);
-            query.setResult(query.preparedStatement().executeQuery());
-            if (query.result().next()) {
-                return query.result().getDouble("Average rating");
-            }
-            throw new IllegalArgumentException("Invalid ID ERROR");
-
-        } catch (SQLException sqle) {
-            throw new IllegalStateException("Not found rating", sqle);
-        }
+        return ratingsRepository.fetchAverageRatingById(movieId);
     }
 
     private Optional<Actor> processSelectStatement(PreparedStatement statement) throws SQLException {
@@ -77,6 +58,6 @@ public class MovieRatingsService {
     }
 
     public List<Integer> getRatingsByTitle(String title) {
-        return getRatingsByTitle(title);
+        return ratingsRepository.fetchRatingsByMovieId(moviesRepository.idFromTitle(title));
     }
 }

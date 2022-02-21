@@ -1,1 +1,1 @@
-create table movies(id bigint not null auto_increment, title varchar(255),release_date date, constraint pk_movies primary key(id));
+CREATE TABLE movies(id bigint not null auto_increment, title varchar(255),release_date DATE, constraint pk_movies primary key(id));
