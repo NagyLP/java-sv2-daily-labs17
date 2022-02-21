@@ -1,40 +1,60 @@
 package Week17.day01;
 
 import Week17.day04.Actor;
-import org.mariadb.jdbc.Statement;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class ActorsRepository {
 
-    private final DataSource dataSource;
+    private JdbcTemplate jdbcTemp;
+    private DataSource dataSource;
 
     public ActorsRepository(DataSource dataSource) {
-        this.dataSource = dataSource;
+        jdbcTemp = new JdbcTemplate(dataSource);
     }
-
 
     public long saveActor(String name) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement stmt =
-                     connection.prepareStatement("insert into actors(actor_name) values(?)",
-                             Statement.RETURN_GENERATED_KEYS)
-        ) {
-            stmt.setString(1, name);
-            stmt.executeUpdate();
-            return executeAndGetGeneratedKey(stmt);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        } catch (SQLException sqle) {
-            throw new IllegalStateException("Update ERROR: " + name, sqle);
-        }
+        jdbcTemp.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedSatement(Connection conn)
+                    throws SQLException {
+                PreparedStatement ps = conn.prepareStatement(
+                        "INSERT INTO" +
+                            " actors(actor_name)" +
+                            " VALUES(?)",
+                        Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1, name);
+                return ps;
+            }
+        }, keyHolder
+        );
+        return keyHolder.getKey().longValue();
     }
+
+//    public long saveActor(String name) {
+//        try (Connection connection = dataSource.getConnection();
+//             PreparedStatement stmt =
+//                     connection.prepareStatement("insert into actors(actor_name) values(?)",
+//                             Statement.RETURN_GENERATED_KEYS)
+//        ) {
+//            stmt.setString(1, name);
+//            stmt.executeUpdate();
+//            return executeAndGetGeneratedKey(stmt);
+//
+//        } catch (SQLException sqle) {
+//            throw new IllegalStateException("Update ERROR: " + name, sqle);
+//        }
+//    }
 
     public Optional<Actor> findActorByName(String name) {
         try (Connection conn = dataSource.getConnection();
