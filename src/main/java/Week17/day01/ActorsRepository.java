@@ -2,7 +2,6 @@ package Week17.day01;
 
 import Week17.day04.Actor;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
@@ -21,22 +20,17 @@ public class ActorsRepository {
         jdbcTemp = new JdbcTemplate(dataSource);
     }
 
-    public long saveActor(String name) {
+    public long createActorReturnId(String name) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemp.update(new PreparedStatementCreator() {
-            @Override
-            public PreparedStatement createPreparedSatement(Connection conn)
-                    throws SQLException {
-                PreparedStatement ps = conn.prepareStatement(
-                        "INSERT INTO" +
-                            " actors(actor_name)" +
-                            " VALUES(?)",
-                        Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1, name);
-                return ps;
-            }
-        }, keyHolder
+        jdbcTemp.update(conn -> {
+                    PreparedStatement ps = conn.prepareStatement(
+                            "INSERT INTO" +
+                                    " actors(actor_name)" +
+                                    " VALUES(?)",
+                            Statement.RETURN_GENERATED_KEYS);
+                    ps.setString(1, name);
+                    return ps;
+                }, keyHolder
         );
         return keyHolder.getKey().longValue();
     }
@@ -55,6 +49,12 @@ public class ActorsRepository {
 //            throw new IllegalStateException("Update ERROR: " + name, sqle);
 //        }
 //    }
+
+
+//public String findActorByName(String name) {
+//        return jdbcTemp.queryForObject("SELECT * FROM actors WHERE actor_name=?",
+//                (rs, rowNum) -> rs.getString("actor_name"), name ));
+
 
     public Optional<Actor> findActorByName(String name) {
         try (Connection conn = dataSource.getConnection();
