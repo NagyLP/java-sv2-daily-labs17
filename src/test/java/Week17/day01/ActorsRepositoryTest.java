@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ActorsRepositoryTest1 {
+class ActorsRepositoryTest {
 
     ActorsRepository actorsRepository;
     MariaDbDataSource dataSource = new MariaDbDataSource();

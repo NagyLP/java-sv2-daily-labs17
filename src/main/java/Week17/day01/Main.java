@@ -20,8 +20,8 @@ public class Main {
 
         try {
             dataSource.setUrl("jdbc:mariadb://localhost:3306/movies-actors?useUnicode=true");
-            dataSource.setUser("***");
-            dataSource.setPassword("***");
+            dataSource.setUser("root");
+            dataSource.setPassword("root555");
         } catch (SQLException throwables) {
             throw new IllegalStateException("Cannot reach DataBase!");
         }
@@ -55,7 +55,7 @@ public class Main {
 //        service.insertMovieWithActors("Indul a bakterház", LocalDate.parse("1969-12-31"), List.of("Olvasztó Imre", "Koltai Róbert"));
 
         ActorsMoviesService actorsMoviesService = new ActorsMoviesService(actorsRepository, moviesRepository, actorsMoviesRepository);
-        actorsMoviesService.insertMovieWithActors("Titanic", LocalDate.parse("1997-12-11"), List.of("Leonardo DiCaprio", "Kate Winslet"));
+        actorsMoviesService.insertMovieWithActors("Titanic", LocalDate.of(1997,12,11), List.of("Leonardo DiCaprio", "Kate Winslet"));
         actorsMoviesService.insertMovieWithActors("Great Gatsby", LocalDate.parse("2012-07-23"), List.of("Tobey Maguire", "Leonardo DiCaprio"));
 
         MovieRatingsService movieRatingsService = new MovieRatingsService(moviesRepository, ratingsRepository);
@@ -65,7 +65,7 @@ public class Main {
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
-        movieRatingsService.addRatingsByTitle("Great Gatsby", 1, 4);
+        movieRatingsService.addRatingsByTitle("Great Gatsby", 5, 4, 5);
         System.out.println(movieRatingsService.getRatingsByTitle("Titanic"));
         System.out.println(movieRatingsService.getRatingsByTitle("Great Gatsby"));
 
