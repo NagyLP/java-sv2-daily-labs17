@@ -20,8 +20,8 @@ public class Main {
 
         try {
             dataSource.setUrl("jdbc:mariadb://localhost:3306/movies-actors?useUnicode=true");
-            dataSource.setUser("root");
-            dataSource.setPassword("root555");
+            dataSource.setUser("**");
+            dataSource.setPassword("***");
         } catch (SQLException throwables) {
             throw new IllegalStateException("Cannot reach DataBase!");
         }
