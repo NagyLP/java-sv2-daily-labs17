@@ -7,7 +7,6 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,25 +76,34 @@ public class ActorsRepository {
         }
     }
 
-
     public List<String> findActorsWithPrefix(String prefix) {
-        List<String> result = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement stmt = connection.prepareStatement("SELECT actor_name FROM actors WHERE actor_name LIKE ?")) {
-            stmt.setString(1, prefix + "%");
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    String actorName = rs.getString("actor_name");
-                    result.add(actorName);
-                }
-            }
-
-        } catch (SQLException sqle) {
-            throw new IllegalStateException("Update ERROR: ", sqle);
-        }
-        return result;
+        return jdbcTemp.query("SELECT actor_name" +
+                        " FROM actors" +
+                        " WHERE actor_name" +
+                        " LIKE ?",
+                (rs, rowNum) ->
+                        rs.getString(1),
+                    prefix + "%");
     }
+
+//    public List<String> findActorsWithPrefix(String prefix) {
+//        List<String> result = new ArrayList<>();
+//        try (Connection connection = dataSource.getConnection();
+//             PreparedStatement stmt = connection.prepareStatement("SELECT actor_name FROM actors WHERE actor_name LIKE ?")) {
+//            stmt.setString(1, prefix + "%");
+//
+//            try (ResultSet rs = stmt.executeQuery()) {
+//                while (rs.next()) {
+//                    String actorName = rs.getString("actor_name");
+//                    result.add(actorName);
+//                }
+//            }
+//
+//        } catch (SQLException sqle) {
+//            throw new IllegalStateException("Update ERROR: ", sqle);
+//        }
+//        return result;
+//    }
 
     private long executeAndGetGeneratedKey(PreparedStatement stmt) {
         try (
